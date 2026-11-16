@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love Letter Guessing Game</title>
+<style>
+  body {
+    background: #fce4ec;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    padding-top: 50px;
+  }
+  h1 { color: #880e4f; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 120px);
+    gap: 20px;
+    margin-top: 30px;
+  }
+  .box {
+    width: 120px;
+    height: 120px;
+    background: #ec407a;
+    border: 4px solid #880e4f;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 10px;
+    transition: transform 0.2s, background 0.3s;
+  }
+  .box:hover { transform: scale(1.05); background: #d81b60; }
+  .box.opened {
+    background: #f8bbd0;
+    color: #880e4f;
+    cursor: default;
+    transform: none;
+  }
+  #message { margin-top: 30px; font-size: 1.5rem; color: #880e4f; font-weight: bold; }
+</style>
+</head>
+<body>
+
+  <h1>Pick a Lucky Box</h1>
+  <div class="grid" id="grid">
+    <div class="box" onclick="openBox(this, 'Today is your lucky!', false)">?</div>
+    <div class="box" onclick="openBox(this, 'May kiss ka saakin!', false)">?</div>
+    <div class="box" onclick="openBox(this, 'I love you more than word!', false)">?</div>
+    <div class="box" onclick="openBox(this, 'Empty', true)">?</div>
+  </div>
+
+  <div id="message"></div>
+  <button id="reset-btn" onclick="shuffleAndReset()" style="display:none; margin-top: 20px; padding: 10px 20px; font-size: 1rem; cursor: pointer;">Try Again?</button>
+
+  <script>
+    let hasChosen = false;
+
+    function openBox(el, msg, isEmpty) {
+      if(hasChosen || el.classList.contains('opened')) return;
+
+      hasChosen = true;
+      el.classList.add('opened');
+      el.innerText = msg;
+
+      const messageDiv = document.getElementById('message');
+      if (isEmpty) {
+        messageDiv.innerText = "Better luck next time!";
+      } else {
+        messageDiv.innerText = "Congrats! You found: " + msg;
+      }
+
+      document.getElementById('reset-btn').style.display = 'block';
+    }
+
+    function shuffleAndReset() {
+      const grid = document.getElementById('grid');
+      for (let i = grid.children.length; i >= 0; i--) {
+        grid.appendChild(grid.children[Math.random() * i | 0]);
+      }
+
+      // Reset state
+      hasChosen = false;
+      document.getElementById('message').innerText = "";
+      document.getElementById('reset-btn').style.display = 'none';
+
+      const boxes = document.querySelectorAll('.box');
+      boxes.forEach(box => {
+        box.classList.remove('opened');
+        box.innerText = '?';
+      });
+    }
+  </script>
+</body>
+</html>
